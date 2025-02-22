@@ -5,13 +5,14 @@
 typedef struct cadastro_pessoa {
     char *nome;
     int id;
-    struct cad_filme_pessoa;
+    struct cadastro_filme_pessoa *prox;
 }cadastro_pessoa;
 
 typedef struct cadastro_filme {
     char *nome_filme;
     char *genero_filme;
     float preco_filme;
+    struct cadastro_filme *prox;
 }cadastro_filme;
 
 typedef struct agendametos{
@@ -20,7 +21,36 @@ typedef struct agendametos{
     int id_pessoa;
     int data;
     int hora;
+    agendamentos *prox;
 }agendamentos;
+
+cadastro_pessoa* adicionar_pessoa(cadastro_pessoa *aux, char *nome, int id){
+    cadastro_pessoa *novo = (cadastro_pessoa*)malloc(sizeof(cadastro_pessoa));
+    novo->nome = nome;
+    novo->id = id;
+    novo->prox = aux;
+    return novo;
+}
+
+cadastro_filme* adicionar_filme(cadastro_filme *aux, char *nome_filme, char *genero_filme, float preco_filme){
+    cadastro_filme *novo = (cadastro_filme*)malloc(sizeof(cadastro_filme));
+    novo->nome_filme = nome_filme;
+    novo->genero_filme = genero_filme;
+    novo->preco_filme = preco_filme;
+    novo->prox = aux;
+    return novo;
+}
+
+agendamentos* adicionar_agendamento(agendamentos *aux, int id, int id_filme, int id_pessoa, int data, int hora){
+    agendamentos *novo = (agendamentos*)malloc(sizeof(agendamentos));
+    novo->id = id;
+    novo->id_filme = id_filme;
+    novo->id_pessoa = id_pessoa;
+    novo->data = data;
+    novo->hora = hora;
+    novo->prox = aux;
+    return novo;
+}
 
 //Esses prints podem ser meio inuteis no futuro, considerem isso ao codar.
 void menu(){
