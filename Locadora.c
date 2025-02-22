@@ -24,6 +24,7 @@ typedef struct agendametos{
     agendamentos *prox;
 }agendamentos;
 
+// Funções de adicionar para listas encadeadas. É apenas um exemplo de possível TAD que usaremos. Caso seja inútil é só deletar. Até então é só um exemplo.
 cadastro_pessoa* adicionar_pessoa(cadastro_pessoa *aux, char *nome, int id){
     cadastro_pessoa *novo = (cadastro_pessoa*)malloc(sizeof(cadastro_pessoa));
     novo->nome = nome;
