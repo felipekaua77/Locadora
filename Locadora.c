@@ -45,6 +45,7 @@ void menu_filme_terror(){
     printf("4.O Chamado\n");
     printf("5.Hora do pesadelo\n");
     printf("6.sair\n");
+    printf("7. Premonição\n");
     int opcao;
     scanf("%d", &opcao);   
     	
