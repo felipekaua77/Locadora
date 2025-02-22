@@ -10,6 +10,7 @@ void menu(){
     printf("3.Ação\n");
     printf("4.Romance\n");
     printf("5.Aventura\n");
+    Printf("_________________________________________________________________________");
 
 
     return 0;
