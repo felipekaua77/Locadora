@@ -22,6 +22,7 @@ typedef struct agendametos{
     int hora;
 }agendamentos;
 
+//Esses prints podem ser meio inuteis no futuro, considerem isso ao codar.
 void menu(){
     int op = 0;
     printf("BEM VINDO A LOCADORA DOS FÃS DE VALÉRIA\n");
@@ -45,7 +46,6 @@ void menu_filme_terror(){
     printf("4.O Chamado\n");
     printf("5.Hora do pesadelo\n");
     printf("6.sair\n");
-    printf("7. Premonição\n");
     int opcao;
     scanf("%d", &opcao);   
     	
