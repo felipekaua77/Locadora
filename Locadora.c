@@ -14,6 +14,14 @@ typedef struct cadastro_filme {
     float preco_filme;
 }cadastro_filme;
 
+typedef struct agendametos{
+    int id;
+    int id_filme;
+    int id_pessoa;
+    int data;
+    int hora;
+}agendamentos;
+
 void menu(){
     int op = 0;
     printf("BEM VINDO A LOCADORA DOS FÃS DE VALÉRIA\n");
