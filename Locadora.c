@@ -1,4 +1,18 @@
 #include<stdio.h>
+#include<stdlib.h>
+#include<time.h>
+
+typedef struct cadastro_pessoa {
+    char *nome;
+    int id;
+    struct cad_filme_pessoa;
+}cadastro_pessoa;
+
+typedef struct cadastro_filme {
+    char *nome_filme;
+    char *genero_filme;
+    float preco_filme;
+}cadastro_filme;
 
 void menu(){
     int op = 0;
@@ -47,6 +61,7 @@ void menu_filme_aventura(){
 
 
 int main(){
+    srand(time(NULL));
     menu();
     return 0;
 }
