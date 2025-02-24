@@ -91,6 +91,9 @@ void menu(){
 //Felps
 int main(){
     srand(time(NULL));
+    int linhas = 10;
+    int colunas = 10;
+    
     menu();
 
     return 0;
