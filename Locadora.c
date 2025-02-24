@@ -1,5 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
+#include <time.h>
 
 typedef struct cadastro_pessoa {
     char *nome;
@@ -7,11 +9,12 @@ typedef struct cadastro_pessoa {
     struct cad_filme_pessoa;
 }cadastro_pessoa;
 
-typedef struct cadastro_filme {
-    char *nome_filme;
-    char *genero_filme;
+typedef struct filme{
+    char nome_filme[100];
+    char genero_filme[50];
     float preco_filme;
-}cadastro_filme;
+    int disponivel;// 1 - Disponivel, 0 - Alugado
+}Filme;
 
 typedef struct agendametos{
     int id;
@@ -20,6 +23,54 @@ typedef struct agendametos{
     int data;
     int hora;
 }agendamentos;
+
+void gerenciar_filme(){
+    int op = 0;
+    printf("Gerenciamento de Filmes:\n\n");
+    printf("1 - Cadastrar Filme \n2 - Editar Filme \n3 - Excluir Filme \n4 - Listar Filmes \n5 - Voltar\n\n");
+    printf("Digite a opcao desejada: ");
+    scanf("%d", &op);
+
+    switch(op){
+        case 1:
+            cadastrar_filme();
+            break;
+        case 2:
+            break;
+        case 3:
+            excluir_filme();
+            break;
+        case 4:
+            listar_filmes();
+            break;
+        case 5:
+            menu();
+            break;
+        default:
+            printf("Opção invalida.\n");
+            break;
+    }
+}
+
+void cadastrar_filme(){
+    Filme *novo_filme = malloc(sizeof(Filme));
+    printf("Digite o nome do filme: ");
+    scanf("%s", novo_filme->nome_filme);
+    printf("Digite o genero do filme: ");
+    scanf("%s", novo_filme->genero_filme);
+    printf("Digite o preco do filme: ");
+    scanf("%f", novo_filme->preco_filme);
+    novo_filme->disponivel = 1;
+}
+
+void editar_filme(Filme* filme){
+    printf("Digite o nome do filme: ");
+    scanf("%s", filme->nome_filme);
+    printf("Digite o genero do filme: ");
+    scanf("%s", filme->genero_filme);
+    printf("Digite o preco do filme: ");
+    scanf("%f", filme->preco_filme);
+}
 
 void menu(){
     int op = 0;
