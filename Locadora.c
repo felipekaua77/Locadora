@@ -26,18 +26,21 @@ Genero generos[MAX_GENEROS] = {
     {"Drama", {}, 0}
 };
 
+// Função que compara dois filmes pelo nome para ordenação
 int comparar_filmes(const void *a, const void *b) {
     Filme *filmeA = (Filme *)a;
     Filme *filmeB = (Filme *)b;
     return strcmp(filmeA->nome_filme, filmeB->nome_filme);
 }
 
+// Função que ordena os filmes de cada gênero em ordem alfabética
 void ordenar_filmes() {
     for (int i = 0; i < MAX_GENEROS; i++) {
         qsort(generos[i].filmes, generos[i].num_filmes, sizeof(Filme), comparar_filmes);
     }
 }
 
+// Função que cadastra um novo filme em um gênero escolhido pelo usuário
 void cadastrar_filme() {
     int genero_id;
     printf("Escolha o genero do filme:\n");
@@ -63,6 +66,7 @@ void cadastrar_filme() {
     }
 }
 
+// Função que lista todos os filmes cadastrados, organizados por gênero
 void listar_filmes() {
     for (int i = 0; i < MAX_GENEROS; i++) {
         printf("Genero: %s\n", generos[i].nome_genero);
@@ -75,12 +79,85 @@ void listar_filmes() {
     }
 }
 
+// Função que remove um filme de um gênero escolhido pelo usuário
+void remover_filme() {
+    int genero_id, filme_id;
+    printf("Escolha o genero do filme a ser removido:\n");
+    for (int i = 0; i < MAX_GENEROS; i++) {
+        printf("%d - %s\n", i + 1, generos[i].nome_genero);
+    }
+    printf("Digite a opcao desejada: ");
+    scanf("%d", &genero_id);
+    genero_id--;
+
+    if (genero_id >= 0 && genero_id < MAX_GENEROS && generos[genero_id].num_filmes > 0) {
+        printf("Escolha o filme a ser removido:\n");
+        for (int j = 0; j < generos[genero_id].num_filmes; j++) {
+            printf("%d - %s\n", j + 1, generos[genero_id].filmes[j].nome_filme);
+        }
+        printf("Digite a opcao desejada: ");
+        scanf("%d", &filme_id);
+        filme_id--;
+
+        if (filme_id >= 0 && filme_id < generos[genero_id].num_filmes) {
+            for (int j = filme_id; j < generos[genero_id].num_filmes - 1; j++) {
+                generos[genero_id].filmes[j] = generos[genero_id].filmes[j + 1];
+            }
+            generos[genero_id].num_filmes--;
+            printf("\n\nFilme removido com sucesso!\n");
+        } else {
+            printf("Filme invalido!\n");
+        }
+    } else {
+        printf("Genero invalido ou nenhum filme cadastrado nesse genero!\n");
+    }
+}
+
+// Função que edita as informações de um filme já cadastrado
+void editar_filme() {
+    int genero_id, filme_id;
+    printf("Escolha o genero do filme a ser editado:\n");
+    for (int i = 0; i < MAX_GENEROS; i++) {
+        printf("%d - %s\n", i + 1, generos[i].nome_genero);
+    }
+    printf("Digite a opcao desejada: ");
+    scanf("%d", &genero_id);
+    genero_id--;
+
+    if (genero_id >= 0 && genero_id < MAX_GENEROS && generos[genero_id].num_filmes > 0) {
+        printf("Escolha o filme a ser editado:\n");
+        for (int j = 0; j < generos[genero_id].num_filmes; j++) {
+            printf("%d - %s\n", j + 1, generos[genero_id].filmes[j].nome_filme);
+        }
+        printf("Digite a opcao desejada: ");
+        scanf("%d", &filme_id);
+        filme_id--;
+
+        if (filme_id >= 0 && filme_id < generos[genero_id].num_filmes) {
+            Filme *filme = &generos[genero_id].filmes[filme_id];
+            printf("Digite o novo nome do filme: ");
+            scanf(" %[^\n]s", filme->nome_filme);
+            printf("Digite o novo preco do filme: ");
+            scanf("%f", &filme->preco_filme);
+            printf("O filme está disponível? (1 - Sim, 0 - Não): ");
+            scanf("%d", &filme->disponivel);
+            ordenar_filmes(); // Ordena os filmes após editar um filme
+            printf("\n\nFilme editado com sucesso!\n");
+        } else {
+            printf("Filme invalido!\n");
+        }
+    } else {
+        printf("Genero invalido ou nenhum filme cadastrado nesse genero!\n");
+    }
+}
+
+// Função que exibe o menu principal e gerencia as opções escolhidas pelo usuário
 void menu() {
     int op = -1;
 
     while (op != 0) {
         printf("\nGerenciamento de Filmes:\n\n");
-        printf("1 - Cadastrar Filme \n2 - Listar Filmes\n0 - Sair\n\n");
+        printf("1 - Cadastrar Filme \n2 - Listar Filmes\n3 - Remover Filme\n4 - Editar Filme\n0 - Sair\n\n");
         printf("Digite a opcao desejada:\n> ");
         scanf("%d", &op);
 
@@ -93,6 +170,12 @@ void menu() {
             case 2:
                 listar_filmes();
                 break;
+            case 3:
+                remover_filme();
+                break;
+            case 4:
+                editar_filme();
+                break;
             default:
                 printf("Opcao invalida.\n");
                 break;
@@ -100,6 +183,7 @@ void menu() {
     }
 }
 
+// Função principal que inicializa o programa
 int main() {
     srand(time(NULL));
     menu();
