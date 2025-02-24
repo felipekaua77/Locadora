@@ -1,118 +1,108 @@
-#include<stdio.h>
-#include<stdlib.h>
-#include<time.h>
-#include<string.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <time.h>
 
-typedef struct cadastro_pessoa {
-    char nome[50];
-    int id;
-} cadastro_pessoa;
+#define MAX_GENEROS 5
+#define MAX_FILMES_POR_GENERO 15
 
-typedef struct cadastro_filme {
-    char nome_filme[50];
-    char genero_filme[30];
+typedef struct {
+    char nome_filme[100];
     float preco_filme;
-    int disponivel; // 1 para disponível, 0 para alugado
-} cadastro_filme;
+    int disponivel; // 1 - Disponivel, 0 - Alugado
+} Filme;
 
-typedef struct agendamentos {
-    int id;
-    int id_filme;
-    int id_pessoa;
-    int data;
-    int hora;
-} agendamentos;
+typedef struct {
+    char nome_genero[50];
+    Filme filmes[MAX_FILMES_POR_GENERO];
+    int num_filmes;
+} Genero;
 
-cadastro_filme** criarTabuleiro(int linhas, int colunas) {
-    cadastro_filme** tabuleiro = (cadastro_filme**)malloc(linhas * sizeof(cadastro_filme*));
-    for (int i = 0; i < linhas; i++) {
-        tabuleiro[i] = (cadastro_filme*)malloc(colunas * sizeof(cadastro_filme));
-    }
-    return tabuleiro;
+Genero generos[MAX_GENEROS] = {
+    {"Terror", {}, 0},
+    {"Comedia", {}, 0},
+    {"Acao", {}, 0},
+    {"Romance", {}, 0},
+    {"Drama", {}, 0}
+};
+
+int comparar_filmes(const void *a, const void *b) {
+    Filme *filmeA = (Filme *)a;
+    Filme *filmeB = (Filme *)b;
+    return strcmp(filmeA->nome_filme, filmeB->nome_filme);
 }
 
-void imprimirTabuleiro(cadastro_filme** tabuleiro, int linhas, int colunas) {
-    // Calcula o comprimento máximo dos nomes dos filmes
-    int maxLen = 1; // Para o caso de "X"
-    for (int i = 0; i < linhas; i++) {
-        for (int j = 0; j < colunas; j++) {
-            int len = strlen(tabuleiro[i][j].nome_filme);
-            if (len > maxLen) {
-                maxLen = len;
-            }
+void ordenar_filmes() {
+    for (int i = 0; i < MAX_GENEROS; i++) {
+        qsort(generos[i].filmes, generos[i].num_filmes, sizeof(Filme), comparar_filmes);
+    }
+}
+
+void cadastrar_filme() {
+    int genero_id;
+    printf("Escolha o genero do filme:\n");
+    for (int i = 0; i < MAX_GENEROS; i++) {
+        printf("%d - %s\n", i + 1, generos[i].nome_genero);
+    }
+    printf("Digite a opcao desejada: ");
+    scanf("%d", &genero_id);
+    genero_id--;
+
+    if (genero_id >= 0 && genero_id < MAX_GENEROS && generos[genero_id].num_filmes < MAX_FILMES_POR_GENERO) {
+        Filme *novo_filme = &generos[genero_id].filmes[generos[genero_id].num_filmes];
+        printf("Digite o nome do filme: ");
+        scanf(" %[^\n]s", novo_filme->nome_filme);
+        printf("Digite o preco do filme: ");
+        scanf("%f", &novo_filme->preco_filme);
+        novo_filme->disponivel = 1;
+        generos[genero_id].num_filmes++;
+        ordenar_filmes(); // Ordena os filmes após cadastrar um novo filme
+        printf("\n\nFilme cadastrado com sucesso!\n");
+    } else {
+        printf("Genero invalido ou limite de filmes atingido!\n");
+    }
+}
+
+void listar_filmes() {
+    for (int i = 0; i < MAX_GENEROS; i++) {
+        printf("Genero: %s\n", generos[i].nome_genero);
+        for (int j = 0; j < generos[i].num_filmes; j++) {
+            Filme *filme = &generos[i].filmes[j];
+            printf("  Filme %d: %s\n", j + 1, filme->nome_filme);
+            printf("    Preco: %.2f\n", filme->preco_filme);
+            printf("    Disponivel: %s\n", filme->disponivel ? "Sim" : "Nao");
         }
     }
+}
 
-    // Imprime os números das colunas
-    printf("    ");
-    for (int j = 0; j < colunas; j++) {
-        printf(" %*d ", maxLen, j);
-    }
-    printf("\n");
+void menu() {
+    int op = -1;
 
-    // Imprime o tabuleiro
-    for (int i = 0; i < linhas; i++) {
-        // Imprime linha de separação
-        printf("   ");
-        for (int j = 0; j < colunas; j++) { 
-            printf("+");
-            for (int k = 0; k < maxLen + 2; k++) {
-                printf("-");
-            }
-        }
-        printf("+\n");
+    while (op != 0) {
+        printf("\nGerenciamento de Filmes:\n\n");
+        printf("1 - Cadastrar Filme \n2 - Listar Filmes\n0 - Sair\n\n");
+        printf("Digite a opcao desejada:\n> ");
+        scanf("%d", &op);
 
-        // Imprime o número da linha
-        printf(" %2d ", i);
-
-        // Imprime os filmes
-        for (int j = 0; j < colunas; j++) { // Imprime "X" se o filme não estiver disponível
-            if (tabuleiro[i][j].disponivel == 0) {
-                printf("| %*s ", -maxLen, "X");
-            } else {
-                printf("| %*s ", -maxLen, tabuleiro[i][j].nome_filme);
-            }
-        }
-        printf("|\n");
-    }
-
-    // Imprime linha de separação final
-    printf("   ");
-    for (int j = 0; j < colunas; j++) {
-        printf("+");
-        for (int k = 0; k < maxLen + 2; k++) {
-            printf("-");
+        switch (op) {
+            case 0:
+                break;
+            case 1:
+                cadastrar_filme();
+                break;
+            case 2:
+                listar_filmes();
+                break;
+            default:
+                printf("Opcao invalida.\n");
+                break;
         }
     }
-    printf("+\n");
 }
 
 int main() {
     srand(time(NULL));
-
-    int linhas = 15;
-    int colunas = 4;
-
-    cadastro_filme** tabuleiro = criarTabuleiro(linhas, colunas);
-
-    // Exemplo de preenchimento do tabuleiro
-    for (int i = 0; i < linhas; i++) {
-        for (int j = 0; j < colunas; j++) {
-            snprintf(tabuleiro[i][j].nome_filme, 50, "Filme%d%d", i, j);
-            snprintf(tabuleiro[i][j].genero_filme, 30, "Genero%d%d", i, j);
-            tabuleiro[i][j].preco_filme = (float)(rand() % 100) / 10.0;
-            tabuleiro[i][j].disponivel = 1; // Todos os filmes começam como disponíveis
-        }
-    }
-
-    printf("Tabuleiro de Filmes:\n");
-    imprimirTabuleiro(tabuleiro, linhas, colunas);
-
-    // Libera a memória alocada
-    for (int i = 0; i < linhas; i++) {
-        free(tabuleiro[i]);
-    }
-    free(tabuleiro);
+    menu();
 
     return 0;
 }
