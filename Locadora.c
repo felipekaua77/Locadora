@@ -1,6 +1,5 @@
-#include<stdio.h>
-#include<stdlib.h>
-#include<time.h>
+#include <stdio.h>
+#include <stdlib.h>
 
 typedef struct cadastro_pessoa {
     char *nome;
@@ -38,39 +37,10 @@ void menu(){
     return 0;
 }
 
-void menu_filme_terror(){
-    printf("1.Sexta feira 13\n");
-    printf("2.O Exorcista\n");
-    printf("3.Invocação do Mal\n");
-    printf("4.O Chamado\n");
-    printf("5.Hora do pesadelo\n");
-    printf("6.sair\n");
-    int opcao;
-    scanf("%d", &opcao);   
-    	
-}
-
-void menu_filme_comedia(){
-
-}
-
-void menu_filme_acao(){
-
-}
-
-void menu_filme_romance(){
-    printf("Infelizmente estamos sem filmes desta categoria :c\n");
-    pritnf("1.sair");
-}
-
-void menu_filme_aventura(){
-
-}
-
-
+//Felps
 int main(){
-    //Felps
     srand(time(NULL));
     menu();
+
     return 0;
 }
