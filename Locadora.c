@@ -11,7 +11,7 @@ typedef struct filme{
     float preco_filme;
     int disponivel; // 1 - Disponivel, 0 - Alugado
 }Filme;
-
+printf("faz o L");
 typedef struct genero{
     char nome_genero[50];
     Filme filmes[MAX_FILMES];
