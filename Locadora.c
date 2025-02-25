@@ -18,6 +18,146 @@ typedef struct genero{
     int num_filmes;
 }Genero;
 
+typedef struct endereco{
+    char rua[100];
+    int numero;
+    char bairro[100];
+    char cidade[100];
+    char estado[100];
+}Endereco_cliente;
+
+typedef struct cliente{
+    char nome_cliente[100];
+    int telefone_cliente;
+    int cpf_cliente;
+    int idade_cliente;
+    Endereco_cliente endereco_C;
+}Clientes_struct;
+
+typedef struct No{
+    int valor;
+    struct No * dir;
+    struct No * esq;
+}No;
+
+No *raiz = NULL;
+int tam = 0;
+
+//buscar um valor na arvore
+No * buscar(int valor, No *aux){
+    if(aux == NULL){
+        return NULL;
+    }else if(valor == aux->valor){
+        return aux;
+    }else if(valor < aux->valor){
+        //pode estar na esq
+        if(aux->esq != NULL){
+            return buscar(valor, aux->esq);
+        }else{
+            return aux; //pai do elemento se ele existisse
+        }
+    }else{
+        //pode estar na dir
+        if(aux->dir != NULL){
+            return buscar(valor, aux->dir);
+        }else{
+            return aux; //pai do elemento se ele existisse
+        }
+    }
+}
+
+//adiciona um valor na arvore
+void add(int valor){
+    No *novo = malloc (sizeof(No));
+    novo->valor = valor;
+    novo->esq = NULL;
+    novo->dir = NULL;
+    No* aux = buscar(valor, raiz);
+    if(aux == NULL){
+        raiz = novo;
+    }else if(aux->valor == valor){
+        printf("Adicao impossivel, chave duplicada! :'( \n");
+        free(novo);
+    }else if(valor < aux->valor){
+        aux->esq = novo;
+    }else{
+        aux->dir = novo;
+    }    
+}
+
+//remove um valor da arvore
+void remover(int valor){
+    No *pai = NULL;
+    No *atual = raiz;
+
+    while(atual != NULL && atual -> valor != valor){ //buscar no pra removr e seu respectivo pai 
+        pai = atual; 
+
+        if(valor < atual -> valor){
+            atual = atual -> esq;
+        }
+        else{
+            atual = atual -> dir;
+        }
+    }
+    if (atual == NULL){ //caso o no nao seja encontrado
+        printf("Essa valor nao foi encontrado!\n");
+        return;
+    }
+    if(atual -> esq == NULL && atual -> dir == NULL){ //remocao da folha
+        if(pai == NULL){  //caso seja a raiz
+            raiz = NULL;
+        }
+        else if(pai -> esq == atual){
+            pai -> esq = NULL;
+        }
+        else{
+            pai -> dir = NULL;
+        }
+        free(atual);
+    }
+    else if(atual -> esq == NULL || atual -> dir == NULL){ //no com apenas um filho
+        No *filho = (atual->esq != NULL) ? atual->esq : atual->dir;
+        
+        if (pai == NULL){ //se for removido a raiz
+            raiz = filho;
+        }
+        else if(pai -> esq == atual){
+            pai -> esq = filho;
+        }
+        else{
+            pai -> dir = filho;
+        }
+        free(atual);
+    }
+    else{ //remocao de no com dois filhos
+        No *sucessor = atual -> dir;
+        No *paisucessor = atual;
+    
+        while(sucessor -> esq != NULL){ //encontrar o menor valor da sub-arvore q fica a direita
+            paisucessor = sucessor;
+            sucessor = sucessor -> esq;
+        }
+
+        atual -> valor = sucessor -> valor; //substituir valor do no que vai ser removido
+
+        if (paisucessor->esq == sucessor) {
+            paisucessor->esq = sucessor->dir;
+        } else {
+            paisucessor->dir = sucessor->dir;
+        }
+        free(sucessor);
+    }
+}
+/*
+void imprimir_in_ordem(No *aux){
+    if(aux != NULL){
+        imprimir_in_ordem(aux->esq);
+        printf("%d\n", aux->valor);
+        imprimir_in_ordem(aux->dir);
+    }
+}*/
+
 Genero generos[MAX_GENEROS] = {
     {"Terror", {}, 0},
     {"Comedia", {}, 0},
