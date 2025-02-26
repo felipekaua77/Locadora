@@ -18,7 +18,7 @@ typedef struct genero{
     int num_filmes;
 }Genero;
 
-typedef struct endereco{
+typedef struct endereco{ // Estrutura de endereço para o cliente
     char rua[100];
     int numero;
     char bairro[100];
@@ -26,7 +26,7 @@ typedef struct endereco{
     char estado[100];
 }Endereco_cliente;
 
-typedef struct cliente{
+typedef struct cliente{ // Estrutura de cliente
     char nome_cliente[100];
     int telefone_cliente;
     int cpf_cliente;
@@ -34,78 +34,102 @@ typedef struct cliente{
     Endereco_cliente endereco_C;
 }Clientes_struct;
 
-typedef struct No{
-    int valor;
+typedef struct No{ // Estrutura de árvore binária
+    Clientes_struct cliente;
     struct No * dir;
     struct No * esq;
 }No;
 
-No *raiz = NULL;
-int tam = 0;
+Genero generos[MAX_GENEROS] = {
+    {"Terror", {}, 0},
+    {"Comedia", {}, 0},
+    {"Acao", {}, 0},
+    {"Romance", {}, 0},
+    {"Drama", {}, 0}
+};
 
-//buscar um valor na arvore
-No * buscar(int valor, No *aux){
-    if(aux == NULL){
+No *raiz = NULL;
+
+// Função que busca um cliente na árvore binária
+No * buscar(int cpf, No *aux){
+    if (aux == NULL){
         return NULL;
-    }else if(valor == aux->valor){
+    }
+    else if(cpf == aux -> cliente.cpf_cliente){
         return aux;
-    }else if(valor < aux->valor){
-        //pode estar na esq
-        if(aux->esq != NULL){
-            return buscar(valor, aux->esq);
-        }else{
-            return aux; //pai do elemento se ele existisse
+    }
+    else if(cpf < aux -> cliente.cpf_cliente){
+        if(aux -> esq != NULL){
+            return buscar(cpf, aux -> esq);
         }
-    }else{
-        //pode estar na dir
-        if(aux->dir != NULL){
-            return buscar(valor, aux->dir);
-        }else{
-            return aux; //pai do elemento se ele existisse
+        else{
+            return aux;
+        }
+    }
+    else{
+        if(aux -> dir != NULL){
+            return buscar(cpf, aux -> dir);
+        }
+        else{
+            return aux;
         }
     }
 }
 
-//adiciona um valor na arvore
-void add(int valor){
-    No *novo = malloc (sizeof(No));
-    novo->valor = valor;
-    novo->esq = NULL;
-    novo->dir = NULL;
-    No* aux = buscar(valor, raiz);
-    if(aux == NULL){
+// Função que adiciona um cliente na árvore binária
+void add_cliente(Clientes_struct cliente){  
+    No *novo = malloc(sizeof(No)); 
+    novo -> cliente = cliente;  
+    novo -> esq = NULL;  
+    novo -> dir = NULL;
+    
+    if (raiz == NULL){
         raiz = novo;
-    }else if(aux->valor == valor){
-        printf("Adicao impossivel, chave duplicada! :'( \n");
-        free(novo);
-    }else if(valor < aux->valor){
-        aux->esq = novo;
-    }else{
-        aux->dir = novo;
-    }    
-}
+    }
+    else{
+        No *aux = raiz;
+        No *pai = NULL;
 
-//remove um valor da arvore
-void remover(int valor){
+        while(aux != NULL){
+            pai = aux;
+
+            if(cliente.cpf_cliente < aux -> cliente.cpf_cliente){
+                aux = aux -> esq;
+            }
+            else{
+                aux = aux -> dir;
+            }
+        }
+
+        if (cliente.cpf_cliente < pai -> cliente.cpf_cliente){
+            pai -> esq = novo;
+        }
+        else{
+            pai -> dir = novo;
+        }
+    }
+ }
+
+ // Função que remove um cliente da árvore binária
+ void remover_cliente(int cpf){
     No *pai = NULL;
     No *atual = raiz;
 
-    while(atual != NULL && atual -> valor != valor){ //buscar no pra removr e seu respectivo pai 
-        pai = atual; 
-
-        if(valor < atual -> valor){
+    while (atual != NULL && atual -> cliente.cpf_cliente != cpf){
+        pai = atual;
+        if(cpf < atual -> cliente.cpf_cliente){
             atual = atual -> esq;
         }
         else{
             atual = atual -> dir;
         }
     }
-    if (atual == NULL){ //caso o no nao seja encontrado
-        printf("Essa valor nao foi encontrado!\n");
-        return;
+    if (atual == NULL){
+        printf("Cliente nao encontrado!\n");
+        return;     
     }
-    if(atual -> esq == NULL && atual -> dir == NULL){ //remocao da folha
-        if(pai == NULL){  //caso seja a raiz
+    if(atual -> esq == NULL && atual -> dir == NULL){
+        if(pai == NULL){
             raiz = NULL;
         }
         else if(pai -> esq == atual){
@@ -116,10 +140,10 @@ void remover(int valor){
         }
         free(atual);
     }
-    else if(atual -> esq == NULL || atual -> dir == NULL){ //no com apenas um filho
-        No *filho = (atual->esq != NULL) ? atual->esq : atual->dir;
-        
-        if (pai == NULL){ //se for removido a raiz
+    else if(atual -> esq == NULL || atual -> dir == NULL){
+        No *filho = (atual -> esq != NULL) ? atual -> esq : atual -> dir;
+
+        if (pai == NULL){
             raiz = filho;
         }
         else if(pai -> esq == atual){
@@ -130,41 +154,129 @@ void remover(int valor){
         }
         free(atual);
     }
-    else{ //remocao de no com dois filhos
+    else{
+        No *pai_sucessor = atual;
         No *sucessor = atual -> dir;
-        No *paisucessor = atual;
-    
-        while(sucessor -> esq != NULL){ //encontrar o menor valor da sub-arvore q fica a direita
-            paisucessor = sucessor;
+
+        while(sucessor -> esq != NULL){
+            pai_sucessor = sucessor;
             sucessor = sucessor -> esq;
         }
 
-        atual -> valor = sucessor -> valor; //substituir valor do no que vai ser removido
+        atual -> cliente = sucessor -> cliente;
 
-        if (paisucessor->esq == sucessor) {
-            paisucessor->esq = sucessor->dir;
-        } else {
-            paisucessor->dir = sucessor->dir;
+        if (pai_sucessor -> esq == sucessor){
+            pai_sucessor -> esq = sucessor -> dir;
         }
-        free(sucessor);
+        else{
+            pai_sucessor -> dir = sucessor -> dir;
+        }
+        free(sucessor);     
+    }
+ }
+
+// Função para buscar um cliente
+void buscar_cliente() {
+    int cpf;
+    printf("Digite o CPF do cliente a ser buscado:\n> ");
+    scanf("%d", &cpf);
+    No *cliente = buscar(cpf, raiz);
+    if (cliente != NULL) {
+        printf("Cliente encontrado:\n");
+        printf("Nome: %s\n", cliente->cliente.nome_cliente);
+        printf("Telefone: %d\n", cliente->cliente.telefone_cliente);
+        printf("CPF: %d\n", cliente->cliente.cpf_cliente);
+        printf("Idade: %d\n", cliente->cliente.idade_cliente);
+        printf("Endereço:\n");
+        printf("  Rua: %s\n", cliente->cliente.endereco_C.rua);
+        printf("  Número: %d\n", cliente->cliente.endereco_C.numero);
+        printf("  Bairro: %s\n", cliente->cliente.endereco_C.bairro);
+        printf("  Cidade: %s\n", cliente->cliente.endereco_C.cidade);
+        printf("  Estado: %s\n", cliente->cliente.endereco_C.estado);
+    } else {
+        printf("Cliente não encontrado.\n");
     }
 }
-/*
-void imprimir_in_ordem(No *aux){
-    if(aux != NULL){
-        imprimir_in_ordem(aux->esq);
-        printf("%d\n", aux->valor);
-        imprimir_in_ordem(aux->dir);
-    }
-}*/
+ 
+// Função para adicionar um cliente
+void adicionar_cliente() {
+    Clientes_struct cliente;
+    printf("Digite o nome do cliente:\n> ");
+    scanf(" %[^\n]s", cliente.nome_cliente);
+    printf("Digite o telefone do cliente:\n> ");
+    scanf("%d", &cliente.telefone_cliente);
+    printf("Digite o CPF do cliente:\n> ");
+    scanf("%d", &cliente.cpf_cliente);
+    printf("Digite a idade do cliente:\n> ");
+    scanf("%d", &cliente.idade_cliente);
+    printf("Digite o endereço do cliente:\n");
+    printf("Rua:\n> ");
+    scanf(" %[^\n]s", cliente.endereco_C.rua);
+    printf("Número:\n> ");
+    scanf("%d", &cliente.endereco_C.numero);
+    printf("Bairro:\n> ");
+    scanf(" %[^\n]s", cliente.endereco_C.bairro);
+    printf("Cidade:\n> ");
+    scanf(" %[^\n]s", cliente.endereco_C.cidade);
+    printf("Estado:\n> ");
+    scanf(" %[^\n]s", cliente.endereco_C.estado);
 
-Genero generos[MAX_GENEROS] = {
-    {"Terror", {}, 0},
-    {"Comedia", {}, 0},
-    {"Acao", {}, 0},
-    {"Romance", {}, 0},
-    {"Drama", {}, 0}
-};
+    add_cliente(cliente);
+    printf("Cliente adicionado com sucesso!\n");
+}
+
+// Função para listar os clientes
+void listar_clientes(No *aux) {
+    if (aux != NULL) {
+        listar_clientes(aux->esq);
+        printf("Nome: %s\n", aux->cliente.nome_cliente);
+        printf("Telefone: %d\n", aux->cliente.telefone_cliente);
+        printf("CPF: %d\n", aux->cliente.cpf_cliente);
+        printf("Idade: %d\n", aux->cliente.idade_cliente);
+        printf("Endereço:\n");
+        printf("  Rua: %s\n", aux->cliente.endereco_C.rua);
+        printf("  Número: %d\n", aux->cliente.endereco_C.numero);
+        printf("  Bairro: %s\n", aux->cliente.endereco_C.bairro);
+        printf("  Cidade: %s\n", aux->cliente.endereco_C.cidade);
+        printf("  Estado: %s\n", aux->cliente.endereco_C.estado);
+        listar_clientes(aux->dir);
+    }
+}
+
+// Função que exibe o menu de clientes e gerencia as opções escolhidas pelo usuário
+void menu_clientes() {
+    int op = -1;
+
+    while (op != 0) {
+        printf("\nGerenciamento de Clientes:\n\n");
+        printf("1 - Adicionar Cliente\n2 - Listar Clientes\n3 - Remover Cliente\n4 - Buscar Cliente\n0 - Sair\n\n");
+        printf("Digite a opcao desejada:\n> ");
+        scanf("%d", &op);
+
+        switch (op) {
+            case 0:
+                break;
+            case 1:
+                adicionar_cliente();
+                break;
+            case 2:
+                listar_clientes(raiz);
+                break;
+            case 3:
+                printf("Digite o CPF do cliente a ser removido:\n> ");
+                int cpf;
+                scanf("%d", &cpf);
+                remover_cliente(cpf);
+                break;
+            case 4:
+                buscar_cliente();
+                break;
+            default:
+                printf("Opcao invalida.\n");
+                break;
+        }
+    }
+}
 
 // Função que compara dois filmes pelo nome para ordenação
 int comparar_filmes(const void *a, const void *b){
@@ -336,10 +448,36 @@ void menu_filmes() {
     }
 }
 
+// Função que exibe o menu principal e gerencia as opções escolhidas pelo usuário
+void menu_principal() {
+    int op = -1;
+
+    while (op != 0) {
+        printf("\nMenu Principal:\n\n");
+        printf("1 - Gerenciar Filmes\n2 - Gerenciar Clientes\n0 - Sair\n\n");
+        printf("Digite a opcao desejada:\n> ");
+        scanf("%d", &op);
+
+        switch (op) {
+            case 0:
+                break;
+            case 1:
+                menu_filmes();
+                break;
+            case 2:
+                menu_clientes();
+                break;
+            default:
+                printf("Opcao invalida.\n");
+                break;
+        }
+    }
+}
+
 // Função principal que inicializa o programa
 int main() {
     srand(time(NULL));
-    menu_filmes();
+    menu_principal();
 
     return 0;
 }
