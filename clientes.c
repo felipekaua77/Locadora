@@ -187,8 +187,9 @@ void menu_clientes(){
     int op = -1;
 
     while(op != 0){
-        printf("\nGerenciamento de Clientes:\n\n");
+        printf("\n////////// Gerenciamento de Clientes //////////\n\n");
         printf("1 - Adicionar Cliente\n2 - Listar Clientes\n3 - Remover Cliente\n4 - Buscar Cliente\n0 - Voltar\n\n");
+        printf("///////////////////////////////////////////////\n\n");
         printf("Digite a opcao desejada:\n> ");
         scanf("%d", &op);
 

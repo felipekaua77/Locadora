@@ -122,8 +122,9 @@ void menu_alugueis(){
     int op = -1;
 
     while(op != 0){
-        printf("\nGerenciamento de Alugueis:\n\n");
+        printf("\n////////// Gerenciamento de Alugueis //////////\n\n");
         printf("1 - Registrar Aluguel\n2 - Devolver Filme\n3 - Calcular Multa\n4 - Listar Filmes Alugados\n0 - Voltar\n\n");
+        printf("//////////////////////////////////////////////\n\n");
         printf("Digite a opcao desejada:\n> ");
         scanf("%d", &op);
 

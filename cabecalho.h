@@ -1,5 +1,5 @@
-#ifndef MAIN_H
-#define MAIN_H
+#ifndef CABECALHO_H
+#define CABECALHO_H
 
 #include <stdio.h>
 #include <stdlib.h>

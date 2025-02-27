@@ -143,8 +143,9 @@ void menu_filmes(){
     int op = -1;
 
     while(op != 0){
-        printf("\nGerenciamento de Filmes:\n\n");
+        printf("\n////////// Gerenciamento de Filmes //////////\n\n");
         printf("1 - Cadastrar Filme \n2 - Listar Filmes\n3 - Remover Filme\n4 - Editar Filme\n0 - Voltar\n\n");
+        printf("////////////////////////////////////////////\n\n");
         printf("Digite a opcao desejada:\n> ");
         scanf("%d", &op);
 
