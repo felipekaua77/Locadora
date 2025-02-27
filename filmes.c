@@ -1,11 +1,4 @@
-#include "main.h"
-
-void menu_clientes(){
-
-};
-void menu_alugueis(){
-
-};
+#include "cabecalho.h"
 
 // Função que compara dois filmes pelo nome para ordenação
 int comparar_filmes(const void *a, const void *b){

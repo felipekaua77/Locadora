@@ -1,5 +1,6 @@
-#include "main.h"
-#include "filmes.c"
+#include "cabecalho.h"
+#include "clientes.c"
+#include "alugueis.c"
 
 //Função que inicia o menu principal do programa
 void menu_principal(){
