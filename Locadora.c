@@ -221,7 +221,7 @@ void adicionar_cliente() {
     scanf("%d", &cliente.cpf_cliente);
     printf("Digite a idade do cliente:\n> ");
     scanf("%d", &cliente.idade_cliente);
-    printf("Digite o endereço do cliente:\n");
+    printf("Digite o endereco do cliente:\n");
     printf("Rua:\n> ");
     scanf(" %[^\n]s", cliente.endereco_C.rua);
     printf("Número:\n> ");
@@ -245,9 +245,9 @@ void listar_clientes(No *aux) {
         printf("Telefone: %d\n", aux->cliente.telefone_cliente);
         printf("CPF: %d\n", aux->cliente.cpf_cliente);
         printf("Idade: %d\n", aux->cliente.idade_cliente);
-        printf("Endereço:\n");
+        printf("Endereco:\n");
         printf("  Rua: %s\n", aux->cliente.endereco_C.rua);
-        printf("  Número: %d\n", aux->cliente.endereco_C.numero);
+        printf("  Numero: %d\n", aux->cliente.endereco_C.numero);
         printf("  Bairro: %s\n", aux->cliente.endereco_C.bairro);
         printf("  Cidade: %s\n", aux->cliente.endereco_C.cidade);
         printf("  Estado: %s\n", aux->cliente.endereco_C.estado);
@@ -456,7 +456,7 @@ void registrar_aluguel() {
                     filme_encontrado = 1;
                     break;
                 } else {
-                    printf("Filme não disponível para aluguel.\n");
+                    printf("Filme não disponivel para aluguel.\n");
                     return;
                 }
             }
@@ -531,6 +531,19 @@ void devolver_filme() {
     printf("Aluguel não encontrado.\n");
 }
 
+void listar_filmes_alugados() {
+    printf("\nFilmes Alugados:\n\n");
+    for (int i = 0; i < num_alugueis; i++) {
+        if (!alugueis[i].devolvido) {
+            printf("Cliente CPF: %d\n", alugueis[i].cpf_cliente);
+            printf("Filme: %s\n", alugueis[i].nome_filme);
+            printf("Data de Aluguel: %s", ctime(&alugueis[i].data_aluguel));
+            printf("Data de Devolucao: %s", ctime(&alugueis[i].data_devolucao));
+            printf("\n");
+        }
+    }
+}
+
 // Função que exibe o menu principal e gerencia as opções escolhidas pelo usuário
 void menu_filmes() {
     int op = -1;
@@ -568,7 +581,7 @@ void menu_alugueis() {
 
     while (op != 0) {
         printf("\nGerenciamento de Alugueis:\n\n");
-        printf("1 - Registrar Aluguel\n2 - Devolver Filme\n3 - Calcular Multa\n0 - Sair\n\n");
+        printf("1 - Registrar Aluguel\n2 - Devolver Filme\n3 - Calcular Multa\n4 - Listar Filmes Alugados\n0 - Sair\n\n");
         printf("Digite a opcao desejada:\n> ");
         scanf("%d", &op);
 
@@ -583,6 +596,9 @@ void menu_alugueis() {
                 break;
             case 3:
                 calcular_multa();
+                break;
+            case 4:
+                listar_filmes_alugados();
                 break;
             default:
                 printf("Opcao invalida.\n");
@@ -621,7 +637,6 @@ void menu_principal() {
 
 // Função principal que inicializa o programa
 int main() {
-    srand(time(NULL));
     menu_principal();
 
     return 0;
