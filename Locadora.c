@@ -18,7 +18,6 @@ typedef struct genero{
     int num_filmes;
 }Genero;
 
-<<<<<<< HEAD
 typedef struct endereco{ // Estrutura de endereço para o cliente
     char rua[100];
     int numero;
@@ -53,8 +52,6 @@ typedef struct aluguel {
 Aluguel alugueis[MAX_ALUGUEIS];
 int num_alugueis = 0;
 
-=======
->>>>>>> b4604e8d9819e5a09b61e7d747318cbe21248f15
 Genero generos[MAX_GENEROS] = {
     {"Terror", {}, 0},
     {"Comedia", {}, 0},
@@ -63,7 +60,6 @@ Genero generos[MAX_GENEROS] = {
     {"Drama", {}, 0}
 };
 
-<<<<<<< HEAD
 No *raiz = NULL;
 
 // Função que busca um cliente na árvore binária
@@ -317,31 +313,6 @@ void cadastrar_filme(){
     for(int i = 0; i < MAX_GENEROS; i++){
         printf("%d - %s\n", i + 1, generos[i].nome_genero);
     }
-=======
-// Função que compara dois filmes pelo nome para ordenação
-int comparar_filmes(const void *a, const void *b){
-    Filme *filmeA = (Filme *)a;
-    Filme *filmeB = (Filme *)b;
-
-    return strcmp(filmeA->nome_filme, filmeB->nome_filme);
-}
-
-// Função que ordena os filmes de cada gênero em ordem alfabética
-void ordenar_filmes(){
-    for(int i = 0; i < MAX_GENEROS; i++){
-        qsort(generos[i].filmes, generos[i].num_filmes, sizeof(Filme), comparar_filmes);
-    }
-}
-
-// Função que cadastra um novo filme em um gênero escolhido pelo usuário
-void cadastrar_filme(){
-    int genero_id;
-
-    printf("\nEscolha o genero do filme:\n");
-    for(int i = 0; i < MAX_GENEROS; i++){
-        printf("%d - %s\n", i + 1, generos[i].nome_genero);
-    }
->>>>>>> b4604e8d9819e5a09b61e7d747318cbe21248f15
     printf("\nDigite a opcao desejada:\n> ");
     scanf("%d", &genero_id);
     genero_id--;
@@ -457,7 +428,6 @@ void editar_filme(){
     }
 }
 
-<<<<<<< HEAD
 void registrar_aluguel() {
     if (num_alugueis >= MAX_ALUGUEIS) {
         printf("Limite de alugueis atingido!\n");
@@ -520,41 +490,10 @@ void calcular_multa() {
             double dias_atraso = difftime(agora, alugueis[i].data_devolucao) / (24 * 60 * 60);
             double multa = dias_atraso * multa_por_dia;
             printf("Cliente CPF: %d está atrasado na devolução do filme '%s'. Multa: R$%.2f\n", alugueis[i].cpf_cliente, alugueis[i].nome_filme, multa);
-=======
-// Função que exibe o menu principal e gerencia as opções escolhidas pelo usuário
-void menu_filmes() {
-    int op = -1;
-
-    while (op != 0) {
-        printf("\nGerenciamento de Filmes:\n\n");
-        printf("1 - Cadastrar Filme \n2 - Listar Filmes\n3 - Remover Filme\n4 - Editar Filme\n0 - Sair\n\n");
-        printf("Digite a opcao desejada:\n> ");
-        scanf("%d", &op);
-
-        switch (op) {
-            case 0:
-                break;
-            case 1:
-                cadastrar_filme();
-                break;
-            case 2:
-                listar_filmes();
-                break;
-            case 3:
-                remover_filme();
-                break;
-            case 4:
-                editar_filme();
-                break;
-            default:
-                printf("Opcao invalida.\n");
-                break;
->>>>>>> b4604e8d9819e5a09b61e7d747318cbe21248f15
         }
     }
 }
 
-<<<<<<< HEAD
 void devolver_filme() {
     int cpf;
     char nome_filme[100];
@@ -699,12 +638,6 @@ void menu_principal() {
 // Função principal que inicializa o programa
 int main() {
     menu_principal();
-=======
-// Função principal que inicializa o programa
-int main() {
-    srand(time(NULL));
-    menu_filmes();
->>>>>>> b4604e8d9819e5a09b61e7d747318cbe21248f15
 
     return 0;
 }
