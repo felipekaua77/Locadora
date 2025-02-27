@@ -43,10 +43,11 @@ void imprimirTabuleiro(cadastro_filme** tabuleiro, int linhas, int colunas) {
         }
     }
 
-    // Imprime os números das colunas
+    // Imprime os gêneros das colunas
+    const char* generos[] = {"Terror", "Comédia", "Aventura", "Drama", "Romance"};
     printf("    ");
     for (int j = 0; j < colunas; j++) {
-        printf(" %*d ", maxLen, j);
+        printf(" %*s ", maxLen, generos[j]);
     }
     printf("\n");
 
@@ -91,15 +92,16 @@ int main() {
     srand(time(NULL));
 
     int linhas = 15;
-    int colunas = 4;
+    int colunas = 5;
 
     cadastro_filme** tabuleiro = criarTabuleiro(linhas, colunas);
 
     // Exemplo de preenchimento do tabuleiro
-    for (int i = 0; i < linhas; i++) {
-        for (int j = 0; j < colunas; j++) {
+    const char* generos[] = {"Terror", "Comedia", "Aventura", "Drama", "Romance"};
+    for (int j = 0; j < colunas; j++) {
+        for (int i = 0; i < linhas; i++) {
             snprintf(tabuleiro[i][j].nome_filme, 50, "Filme%d%d", i, j);
-            snprintf(tabuleiro[i][j].genero_filme, 30, "Genero%d%d", i, j);
+            snprintf(tabuleiro[i][j].genero_filme, 30, "%s", generos[j]);
             tabuleiro[i][j].preco_filme = (float)(rand() % 100) / 10.0;
             tabuleiro[i][j].disponivel = 1; // Todos os filmes começam como disponíveis
         }
