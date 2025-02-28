@@ -1,0 +1,8 @@
+Genero: Terror
+  Filme 1: Sexta-Feira 13
+    Preco: 13.00
+    Disponivel: Sim
+Genero: Comedia
+Genero: Acao
+Genero: Romance
+Genero: Drama

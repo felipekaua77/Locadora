@@ -1,6 +1,7 @@
 #include "cabecalho.h"
 #include "filmes.c"
 
+// Função para registrar um aluguel
 void registrar_aluguel(){
     if(num_alugueis >= MAX_ALUGUEIS){
         printf("Limite de alugueis atingido!\n");
@@ -54,20 +55,24 @@ void registrar_aluguel(){
     printf("Aluguel registrado com sucesso!\n");
 }
 
+// Calcula a multa para os alugueis atrasados
 void calcular_multa(){
     printf("Calculando multas...\n"); // Mensagem de depuração
-    time_t agora = time(NULL);
+    time_t agora = time(NULL); // Data e hora atuais
     double multa_por_dia = 5.0; // Valor da multa por dia de atraso
 
+    // Percorre todos os alugueis
     for(int i = 0; i < num_alugueis; i++){
+        // Verifica se o filme ainda não foi devolvido e se a data de devolução já passou
         if(!alugueis[i].devolvido && alugueis[i].data_devolucao < agora){
-            double dias_atraso = difftime(agora, alugueis[i].data_devolucao) / (24 * 60 * 60);
-            double multa = dias_atraso * multa_por_dia;
+            double dias_atraso = difftime(agora, alugueis[i].data_devolucao) / (24 * 60 * 60); // Calcula a quantidade de dias de atraso
+            double multa = dias_atraso * multa_por_dia; // Calcula o valor da multa
             printf("Cliente CPF: %d esta atrasado na devolucao do filme '%s'. Multa: R$%.2f\n", alugueis[i].cpf_cliente, alugueis[i].nome_filme, multa);
         }
     }
 }
 
+// Devolve um filme alugado
 void devolver_filme(){
     int cpf;
     char nome_filme[100];
@@ -105,6 +110,7 @@ void devolver_filme(){
     printf("Aluguel nao encontrado.\n");
 }
 
+// Lista os filmes alugados
 void listar_filmes_alugados(){
     printf("\nFilmes Alugados:\n\n");
     for(int i = 0; i < num_alugueis; i++){
@@ -118,6 +124,7 @@ void listar_filmes_alugados(){
     }
 }
 
+// Menu de gerenciamento de alugueis
 void menu_alugueis(){
     int op = -1;
 

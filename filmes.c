@@ -1,3 +1,5 @@
+#include <stdio.h>
+#include <string.h>
 #include "cabecalho.h"
 
 // Função que compara dois filmes pelo nome para ordenação
@@ -13,6 +15,65 @@ void ordenar_filmes(){
     for(int i = 0; i < MAX_GENEROS; i++){
         qsort(generos[i].filmes, generos[i].num_filmes, sizeof(Filme), comparar_filmes);
     }
+}
+
+// Função que salva os filmes cadastrados em um arquivo de texto
+void salvar_filmes(){
+    FILE *file = fopen("filmes.txt", "w+");
+    if (file == NULL) {
+        printf("Erro ao abrir o arquivo para escrita.\n");
+        return;
+    }
+
+    for(int i = 0; i < MAX_GENEROS; i++){
+        fprintf(file, "Genero: %s\n", generos[i].nome_genero);
+        for(int j = 0; j < generos[i].num_filmes; j++){
+            Filme *filme = &generos[i].filmes[j];
+            fprintf(file, "  Filme %d: %s\n", j + 1, filme->nome_filme);
+            fprintf(file, "    Preco: %.2f\n", filme->preco_filme);
+            fprintf(file, "    Disponivel: %s\n", filme->disponivel ? "Sim" : "Nao");
+        }
+    }
+
+    fclose(file);
+}
+
+// Função que carrega os filmes cadastrados de um arquivo de texto
+void carregar_filmes(){
+    FILE *file = fopen("filmes.txt", "r");
+    if (file == NULL) {
+        return;
+    }
+
+    char linha[256];
+    int genero_atual = -1;
+
+    while (fgets(linha, sizeof(linha), file)) {
+        if (strncmp(linha, "Genero: ", 8) == 0) {
+            char nome_genero[50];
+            sscanf(linha, "Genero: %[^\n]s", nome_genero);
+            for (int i = 0; i < MAX_GENEROS; i++) {
+                if (strcmp(generos[i].nome_genero, nome_genero) == 0) {
+                    genero_atual = i;
+                    break;
+                }
+            }
+        } else if (genero_atual != -1 && strncmp(linha, "  Filme ", 8) == 0) {
+            Filme novo_filme;
+            sscanf(linha, "  Filme %*d: %[^\n]s", novo_filme.nome_filme);
+            fgets(linha, sizeof(linha), file);
+            sscanf(linha, "    Preco: %f", &novo_filme.preco_filme);
+            fgets(linha, sizeof(linha), file);
+            char disponivel[4];
+            sscanf(linha, "    Disponivel: %s", disponivel);
+            novo_filme.disponivel = (strcmp(disponivel, "Sim") == 0);
+
+            generos[genero_atual].filmes[generos[genero_atual].num_filmes] = novo_filme;
+            generos[genero_atual].num_filmes++;
+        }
+    }
+
+    fclose(file);
 }
 
 // Função que cadastra um novo filme em um gênero escolhido pelo usuário
@@ -38,6 +99,7 @@ void cadastrar_filme(){
         generos[genero_id].num_filmes++;
 
         ordenar_filmes(); // Ordena os filmes após cadastrar um novo filme
+        salvar_filmes(); // Salva os filmes após cadastrar um novo filme
         printf("\nFilme cadastrado com sucesso!\n");
     } else{
         printf("\nGenero invalido ou limite de filmes atingido!\n");
@@ -47,7 +109,7 @@ void cadastrar_filme(){
 // Função que lista todos os filmes cadastrados, organizados por gênero
 void listar_filmes(){
     printf("\n");
-
+    printf("////////// Lista de Filmes //////////\n\n");
     for(int i = 0; i < MAX_GENEROS; i++){
         printf("Genero: %s\n", generos[i].nome_genero);
 
@@ -58,6 +120,7 @@ void listar_filmes(){
             printf("    Disponivel: %s\n", filme->disponivel ? "Sim" : "Nao");
         }
     }
+    printf("\n////////////////////////////////////\n\n");
 }
 
 // Função que remove um filme de um gênero escolhido pelo usuário
@@ -87,6 +150,7 @@ void remover_filme(){
                 generos[genero_id].filmes[j] = generos[genero_id].filmes[j + 1];
             }
             generos[genero_id].num_filmes--;
+            salvar_filmes(); // Salva os filmes após remover um filme
             printf("\nFilme removido com sucesso!\n");
         } else{
             printf("\nFilme invalido!\n");
@@ -129,6 +193,7 @@ void editar_filme(){
             scanf("%d", &filme->disponivel);
 
             ordenar_filmes(); // Ordena os filmes após editar um filme
+            salvar_filmes(); // Salva os filmes após editar um filme
             printf("\nFilme editado com sucesso!\n");
         } else{
             printf("\nFilme invalido!\n");

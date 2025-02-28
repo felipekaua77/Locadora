@@ -25,13 +25,15 @@ typedef struct genero{
     int num_filmes;
 }Genero;
 
-typedef struct endereco{ // Estrutura de endereço para o cliente
+// Estrutura de endereço para o cliente
+typedef struct endereco{ 
     char rua[100];
     int numero;
     char bairro[100];
 }Endereco_cliente;
 
-typedef struct cliente{ // Estrutura de cliente
+// Estrutura de cliente
+typedef struct cliente{ 
     char nome_cliente[100];
     int telefone_cliente;
     int cpf_cliente;
@@ -39,12 +41,14 @@ typedef struct cliente{ // Estrutura de cliente
     Endereco_cliente endereco_C;
 }Clientes_struct;
 
-typedef struct No{ // Estrutura de árvore binária
+// Estrutura de árvore binária para os clientes
+typedef struct No{ 
     Clientes_struct cliente;
     struct No * dir;
     struct No * esq;
 }No;
 
+// Estrutura de aluguel
 typedef struct aluguel {
     int cpf_cliente;
     char nome_filme[100];
@@ -62,11 +66,11 @@ Genero generos[MAX_GENEROS] = {
     {"Drama", {}, 0}
 };
 
-No *raiz = NULL;
-Aluguel alugueis[MAX_ALUGUEIS];
-int num_alugueis = 0;
+No *raiz = NULL; //Raiz da árvore de clientes
+Aluguel alugueis[MAX_ALUGUEIS]; //Vetor de aluguéis
+int num_alugueis = 0; //Número de aluguéis registrados
 
-//Protótipos das funções do arquivo filmes.c
+//Definição das funções do arquivo filmes.c
 int comparar_filmes(const void *a, const void *b);
 void ordenar_filmes();
 void cadastrar_filme();
@@ -74,8 +78,10 @@ void listar_filmes();
 void remover_filme();
 void editar_filme();
 void menu_filmes();
+void salvar_filmes();
+void carregar_filmes();
 
-//Protótipos das funções do arquivo clientes.c
+//Definição das funções do arquivo clientes.c
 No * buscar(int cpf, No *aux);
 void remover_cliente(int cpf);
 void listar_clientes(No *aux);
@@ -83,7 +89,7 @@ void adicionar_cliente();
 void buscar_cliente();
 void menu_clientes();
 
-//Protótipos das funções do arquivo alugueis.c
+//Definição das funções do arquivo alugueis.c
 void registrar_aluguel();
 void calcular_multa();
 void devolver_filme();

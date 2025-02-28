@@ -39,6 +39,7 @@ void menu_principal(){
 }
 
 int main(){
+    carregar_filmes(); // Carrega os filmes do arquivo filmes.txt ao iniciar o programa
     menu_principal();
 
     return 0;
